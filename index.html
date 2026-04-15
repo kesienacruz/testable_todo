@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Testable Todo Item Card</title>
+  <title>Advanced Todo Card - Stage 1a</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="page-shell">
-    <article class="todo-card" data-testid="test-todo-card" aria-labelledby="todo-title">
+    <article class="todo-card priority-high" data-testid="test-todo-card" aria-labelledby="todo-title">
+      <span class="priority-indicator priority-high" data-testid="test-todo-priority-indicator" aria-hidden="true"></span>
+
       <header class="todo-header">
         <div class="todo-check-wrap">
           <input
@@ -22,7 +24,7 @@
         <div class="todo-heading">
           <div class="title-priority-row">
             <h2 id="todo-title" class="todo-title" data-testid="test-todo-title">
-              Finish UI Task
+              Finish UI Task With Interactive State Handling
             </h2>
 
             <span
@@ -34,23 +36,57 @@
             </span>
           </div>
 
-          <p class="todo-description" data-testid="test-todo-description">
-            Complete the Testable Todo card to get into stage 1: Make it accessible interactions, exact test IDs,
-            responsive layout, semantic HTML, and polished visual styling for review.
-          </p>
+          <section
+            class="todo-collapsible is-collapsed"
+            data-testid="test-todo-collapsible-section"
+            id="todo-collapsible-section"
+          >
+            <p class="todo-description" data-testid="test-todo-description">
+              Complete the Stage 1a todo card by adding edit mode, synchronized status controls,
+              granular time updates, overdue handling, and an accessible expand/collapse pattern.
+              The layout must stay clean and responsive across mobile, tablet, and desktop sizes,
+              while remaining fully keyboard accessible and easy to test with exact data-testid
+              values. The card should behave like a polished, stateful UI component rather than a
+              static mockup.
+            </p>
+          </section>
+
+          <button
+            type="button"
+            class="expand-toggle"
+            data-testid="test-todo-expand-toggle"
+            aria-expanded="false"
+            aria-controls="todo-collapsible-section"
+          >
+            Show more
+          </button>
         </div>
       </header>
 
       <section class="todo-meta" aria-label="Task information">
         <div class="meta-item">
           <span class="meta-label">Status</span>
-          <span
-            class="status-badge status-in-progress"
-            data-testid="test-todo-status"
-            aria-label="Status In Progress"
-          >
-            In Progress
-          </span>
+          <div class="status-stack">
+            <span
+              class="status-badge status-in-progress"
+              data-testid="test-todo-status"
+              aria-label="Status In Progress"
+            >
+              In Progress
+            </span>
+
+            <label class="sr-only" for="todo-status-control">Task status</label>
+            <select
+              id="todo-status-control"
+              class="status-control"
+              data-testid="test-todo-status-control"
+              aria-label="Task status"
+            >
+              <option>Pending</option>
+              <option selected>In Progress</option>
+              <option>Done</option>
+            </select>
+          </div>
         </div>
 
         <div class="meta-item">
@@ -58,13 +94,13 @@
           <time
             class="meta-value"
             data-testid="test-todo-due-date"
-            datetime="2026-04-010T18:00:00Z"
+            datetime="2026-12-01T18:00:00.000Z"
           >
-            Due Apr 20, 2026
+            Due Dec 1, 2026
           </time>
         </div>
 
-        <div class="meta-item meta-item-wide">
+        <div class="meta-item">
           <span class="meta-label">Time remaining</span>
           <time
             class="meta-value time-remaining"
@@ -74,20 +110,25 @@
             Calculating…
           </time>
         </div>
+
+        <div class="meta-item">
+          <span class="meta-label">Due state</span>
+          <span
+            class="overdue-indicator is-hidden"
+            data-testid="test-todo-overdue-indicator"
+            aria-live="polite"
+          >
+            Overdue
+          </span>
+        </div>
       </section>
 
       <section class="tags-section" aria-label="Task tags">
         <span class="meta-label tags-heading">Tags</span>
         <ul class="tags-list" role="list" data-testid="test-todo-tags">
-          <li>
-            <span class="tag-chip tag-work" data-testid="test-todo-tag-work">work</span>
-          </li>
-          <li>
-            <span class="tag-chip tag-urgent" data-testid="test-todo-tag-urgent">urgent</span>
-          </li>
-          <li>
-            <span class="tag-chip tag-design">design</span>
-          </li>
+          <li><span class="tag-chip tag-work" data-testid="test-todo-tag-work">work</span></li>
+          <li><span class="tag-chip tag-urgent" data-testid="test-todo-tag-urgent">urgent</span></li>
+          <li><span class="tag-chip tag-design">design</span></li>
         </ul>
       </section>
 
@@ -108,6 +149,73 @@
           Delete
         </button>
       </nav>
+
+      <section
+        class="edit-form-panel hidden"
+        data-testid="test-todo-edit-form"
+        aria-label="Edit task form"
+      >
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="edit-title-input">Title</label>
+            <input
+              id="edit-title-input"
+              type="text"
+              data-testid="test-todo-edit-title-input"
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="edit-description-input">Description</label>
+            <textarea
+              id="edit-description-input"
+              rows="5"
+              data-testid="test-todo-edit-description-input"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="edit-priority-select">Priority</label>
+              <select
+                id="edit-priority-select"
+                data-testid="test-todo-edit-priority-select"
+              >
+                <option>Low</option>
+                <option>Medium</option>
+                <option selected>High</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="edit-due-date-input">Due date</label>
+              <input
+                id="edit-due-date-input"
+                type="datetime-local"
+                data-testid="test-todo-edit-due-date-input"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="action-button action-save"
+            data-testid="test-todo-save-button"
+          >
+            Save
+          </button>
+
+          <button
+            type="button"
+            class="action-button action-cancel"
+            data-testid="test-todo-cancel-button"
+          >
+            Cancel
+          </button>
+        </div>
+      </section>
     </article>
   </main>
 
